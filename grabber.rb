@@ -24,39 +24,58 @@ def http_swap(url)
 end
 
 # Analyse a page grabbed from the URLs
-def page_analyse(f)
+def page_analyse(doc)
 
-    doc = Nokogiri(f)
+    if doc
     
-    # Get all the links href values
-    hrefs = doc.xpath("//a/@href")
+        # Get all the links href values
+        hrefs = doc.xpath("//a/@href")
 
-    links = []
+        links = []
 
-    hrefs.each do |href|
-        # Check for a leading slash, most links will be of this form
-        if /^\//.match(href.value)
-            links << href.value
+        hrefs.each do |href|
+            # Check for a leading slash, most links will be of this form
+            if /^\//.match(href.value)
+                links << href.value
+            end
         end
+
+        links.uniq!
     end
-
-    links.uniq!
-
-    puts links
 end
 
-def grabWebsite(url)
+def getSubLinks(url, found)
+
     begin
-        open(url, redirect: true) do |f|
-            page_analyse(f)
+        doc = Nokogiri(open(url, redirect: true))
+    rescue OpenURI::HTTPError
+       # Do nothing 
+    end
+
+    links = page_analyse(doc)
+
+    if links
+        links.each do |l|
+            unless found.index(l)
+                found << l
+
+                grabWebsite(url + '/' + l, found)
+            end
         end
+    end
+end
+
+
+def grabWebsite(url, found = [])
+    begin
+        getSubLinks(url, found)
     rescue RuntimeError
         url = http_swap(url)
-        open(url, redirect: true) do |f|
-            page_analyse(f)
-        end
-
+        getSubLinks(url, found)
     end
+
+    found
 end
 
-grabWebsite('http://digitalocean.com')
+# TODO: Grab the base of a url, no sub dirs
+puts grabWebsite('http://digitalocean.com')
