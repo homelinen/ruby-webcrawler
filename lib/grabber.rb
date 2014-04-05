@@ -5,105 +5,107 @@ require 'nokogiri'
 
 require './lib/webpage'
 
-# Given a url, find and replace http or https to the alternate form
-#
-# This is to patch the feature in open-url that blocks https -> http redirection
-def http_swap(url)
+module Grabber
+    # Given a url, find and replace http or https to the alternate form
+    #
+    # This is to patch the feature in open-url that blocks https -> http redirection
+    def http_swap(url)
 
-    # If we don't set new_url again, return the original
-    new_url = url
+        # If we don't set new_url again, return the original
+        new_url = url
 
-    # Match non-https
-    m = /http[^s]/.match url
+        # Match non-https
+        m = /http[^s]/.match url
 
-    if m
-        new_url = url.gsub(/http:/, 'https:')
-    elsif /https:\/\//.match(url)
-        new_url = url.gsub(/https:/, 'http:')
+        if m
+            new_url = url.gsub(/http:/, 'https:')
+        elsif /https:\/\//.match(url)
+            new_url = url.gsub(/https:/, 'http:')
+        end
+
+        new_url
     end
 
-    new_url
-end
+    # Analyse a page grabbed from the URLs
+    def page_analyse(doc)
 
-# Analyse a page grabbed from the URLs
-def page_analyse(doc)
+        if doc
+        
+            # Get all the links href values
+            hrefs = doc.xpath("//a/@href")
 
-    if doc
-    
-        # Get all the links href values
-        hrefs = doc.xpath("//a/@href")
+            links = []
 
-        links = []
+            hrefs.each do |href|
+                # Check for a leading slash, most links will be of this form
+                if /^\//.match(href.value)
+                    links << href.value
+                end
+            end
 
-        hrefs.each do |href|
-            # Check for a leading slash, most links will be of this form
-            if /^\//.match(href.value)
-                links << href.value
+            links.uniq!
+        end
+    end
+
+    def has_link?(ary, link)
+
+        found = false
+        
+        ary.each do |webpage|
+            if webpage.node_name == link
+                found = true
+                break
             end
         end
 
-        links.uniq!
+        found
     end
-end
 
-def has_link?(ary, link)
+    def getSubLinks(url, found)
 
-    found = false
-    
-    ary.each do |webpage|
-        if webpage.node_name == link
-            found = true
-            break
+        begin
+            doc = Nokogiri(open(url, redirect: true))
+        rescue OpenURI::HTTPError
+           # Do nothing 
         end
-    end
 
-    found
-end
+        links = page_analyse(doc)
 
-def getSubLinks(url, found)
+        if links
+            links.each do |l|
+                unless has_link?(found, l)
 
-    begin
-        doc = Nokogiri(open(url, redirect: true))
-    rescue OpenURI::HTTPError
-       # Do nothing 
-    end
+                    wp = Webpage.new(l)
+                    found << wp
 
-    links = page_analyse(doc)
-
-    if links
-        links.each do |l|
-            unless has_link?(found, l)
-
-                wp = Webpage.new(l)
-                found << wp
-
-                grabWebsite(url + '/' + l, found)
-            else
-                # TODO: Add to a webpages links if not already there
+                    grabWebsite(url + '/' + l, found)
+                else
+                    # TODO: Add to a webpages links if not already there
+                end
             end
         end
     end
-end
 
 
-def grabWebsite(url, found = [])
+    def grabWebsite(url, found = [])
 
-    if found.empty?
-        root = '/'
+        if found.empty?
+            root = '/'
 
-        root_page = Webpage.new(root)
+            root_page = Webpage.new(root)
 
-        found << root_page
+            found << root_page
+        end
+        begin
+            getSubLinks(url, found)
+        rescue RuntimeError
+            url = http_swap(url)
+            getSubLinks(url, found)
+        end
+
+        found
     end
-    begin
-        getSubLinks(url, found)
-    rescue RuntimeError
-        url = http_swap(url)
-        getSubLinks(url, found)
-    end
-
-    found
 end
 
 # TODO: Grab the base of a url, no sub dirs
-puts grabWebsite('http://digitalocean.com')
+#puts Grabber.grabWebsite('http://digitalocean.com')
