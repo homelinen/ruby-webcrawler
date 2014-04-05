@@ -5,6 +5,8 @@ require 'nokogiri'
 require 'grabber'
 include Grabber
 
+require 'webpage'
+
 describe 'Grabber', "utility" do
 
     it "can replace urls" do
@@ -36,4 +38,21 @@ describe 'Grabber', "utility" do
 
         links.uniq.should eql(links)
     end
+
+    it "can search a website" do
+        # This must match the heel config in the Rakefile
+        localsite = 'http://0.0.0.0:9999'
+
+        found = grabWebsite(localsite)
+
+        found.length.should be 1
+
+        has_link?(found, '/').should be_true
+    end
+
+    #it "can handle urls" do
+        #site = '0.0.0.0:9999'
+
+        #grabWebsite(site).should raise_error(Errno::ENOENT), 'No /https?/ included'
+    #end
 end
