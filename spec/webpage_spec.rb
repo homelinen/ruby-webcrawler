@@ -1,6 +1,6 @@
 #webpage_spec.rb
 
-require './webpage.rb'
+require 'webpage'
 
 describe Webpage, "new" do
     it "creates a valid new object" do
