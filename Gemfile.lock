@@ -20,6 +20,7 @@ GEM
     puma (2.8.1)
       rack (>= 1.1, < 2.0)
     rack (1.5.2)
+    rake (10.2.2)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -40,5 +41,6 @@ PLATFORMS
 DEPENDENCIES
   heel
   nokogiri (~> 1.6.1)
+  rake
   rspec
   simplecov
