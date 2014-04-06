@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 require 'open-uri'
 require 'nokogiri'
 
@@ -63,14 +61,20 @@ class Webcrawler
         end
 
         links = page_analyse(doc)
+        
+        links_so_far = found.site_links << found.node_name
 
         if links
             links.each do |l|
-                unless Utility.has_link?(found, l)
+
+                unless Utility.has_link?(links_so_far, l)
 
                     wp = Webpage.new(l)
-                    found << wp
+                    found.add_link wp
 
+                    # Update the so far list, easier than joining two arrays
+                    # per iter
+                    links_so_far << wp
                     grabWebsite(url + '/' + l, found)
                 else
                     # TODO: Add to a webpages links if not already there
@@ -79,15 +83,16 @@ class Webcrawler
         end
     end
 
-    def grabWebsite(url, found = [])
+    def grabWebsite(url, found = nil)
 
-        if found.empty?
+        if found.nil?
             root = '/'
 
             root_page = Webpage.new(root)
 
-            found << root_page
+            found = root_page
         end
+
         begin
             getSubLinks(url, found)
         rescue RuntimeError

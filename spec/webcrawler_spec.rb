@@ -36,7 +36,7 @@ describe Webcrawler, "utility" do
         links.should include("/from")
         links.should_not include("/foo")
 
-        links.uniq.should eql(links)
+        links.uniq.should == links
     end
 
     it "can search a website" do
@@ -46,7 +46,7 @@ describe Webcrawler, "utility" do
         sitemap = Webcrawler.new
         found = sitemap.grabWebsite localsite
 
-        found.length.should be 1
+        found.site_links.length.should be 1
 
         found.include?(Webpage.new('/')).should be_true
     end

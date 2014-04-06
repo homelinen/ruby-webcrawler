@@ -65,9 +65,11 @@ class Webpage
         end
     end
 
-    def eql?(webpage)
+    def ==(webpage)
 
         webpage.node_name == @node_name
 
     end
+
+    alias :include? :has_link?
 end

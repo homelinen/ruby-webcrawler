@@ -36,13 +36,13 @@ describe Webpage, "new" do
         web1 = Webpage.new('/about')
         web2 = Webpage.new('/about')
 
-        web2.should eql(web1)
+        web2.should ==(web1)
 
         web3 = Webpage.new('/about/dance')
-        web1.should_not eql(web3)
+        web1.should_not ==(web3)
 
         web4 = Webpage.new('/')
-        web1.should_not eql(web4)
+        web1.should_not ==(web4)
     end
 
     it "can add links" do
@@ -51,7 +51,7 @@ describe Webpage, "new" do
 
         old_about = Webpage.new('/about')
         # Check chaining exists
-        web1.add_page(old_about).should be(web1)
+        web1.add_page(old_about).should equal(web1)
 
         web1.has_link?('/about').should be_true
 
