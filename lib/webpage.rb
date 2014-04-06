@@ -1,7 +1,12 @@
 
 require './lib/utility'
 
+# A representation of a site in a site map
+#
+# A site has many links and is a recursive tree structure
 class Webpage
+
+    #TODO: Pages should have a domain? 
 
     attr_accessor :node_name, :site_links
 
@@ -17,8 +22,28 @@ class Webpage
         @site_links = []
     end
 
-    def add_link(link)
-        @site_links << link
+    def get_page(page)
+
+        unless page.class == String
+            @site_links.detect do |p|
+                p == page
+            end
+        else
+            @site_links.detect do |p|
+                p.node_name == page
+            end
+        end
+    end
+
+    # Add a page to the tree
+    def add_page(page)
+        existing_page = get_page(page)
+
+        # Add the new page
+        page = existing_page if existing_page
+        @site_links << page
+
+        self
     end
 
     def to_s
@@ -28,7 +53,16 @@ class Webpage
     end
 
     def has_link?(link)
-        Utility.has_link?(@site_links, link)
+        is_me = false
+
+        is_me = @node_name == link
+        is_me = @node_name == link.node_name unless link.class == String or is_me
+
+        unless is_me
+            Utility.has_link?(@site_links, link)
+        else
+            is_me
+        end
     end
 
     def eql?(webpage)

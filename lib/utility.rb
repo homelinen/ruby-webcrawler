@@ -2,16 +2,14 @@
 # Shared utility code
 module Utility
     def self.has_link?(ary, link)
-
-        found = false
-        
-        ary.each do |webpage|
-            if webpage.node_name == link
-                found = true
-                break
+        if link.class == String
+            ary.any? do |webpage|
+                webpage.node_name == link
+            end
+        else
+            ary.any? do |webpage|
+                webpage.node_name == link.node_name
             end
         end
-
-        found
     end
 end

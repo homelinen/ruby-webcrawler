@@ -48,7 +48,7 @@ describe Webcrawler, "utility" do
 
         found.length.should be 1
 
-        found.has_link?('/').should be_true
+        found.include?(Webpage.new('/')).should be_true
     end
 
     #it "can handle urls" do
