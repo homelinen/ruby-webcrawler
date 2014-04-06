@@ -1,4 +1,6 @@
 
+require './lib/utility'
+
 class Webpage
 
     attr_accessor :node_name, :site_links
@@ -26,16 +28,12 @@ class Webpage
     end
 
     def has_link?(link)
-        found = false
-        
-        @site_links.each do |webpage|
-            # TODO: Handle if webpage is a string?
-            if webpage.node_name == link
-                found = true
-                break
-            end
-        end
+        Utility.has_link?(@site_links, link)
+    end
 
-        found
+    def eql?(webpage)
+
+        webpage.node_name == @node_name
+
     end
 end

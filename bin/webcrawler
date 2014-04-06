@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require 'webcrawler'
+
+unless ARGV[0].nil? or ARGV[0].empty?
+    sitemap = Webcrawler.new()
+
+    found = sitemap.grabWebsite(ARGV[0])
+
+    puts found
+else
+    puts "Not enough arguments"
+end

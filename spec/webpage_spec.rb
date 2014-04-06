@@ -31,4 +31,18 @@ describe Webpage, "new" do
         webpage.has_link?("/about").should be_true
         webpage.has_link?("/anaconda").should be_false
     end
+
+    it "can be compared" do 
+        web1 = Webpage.new('/about')
+        web2 = Webpage.new('/about')
+
+        web2.should eql(web1)
+
+        web3 = Webpage.new('/about/dance')
+        web1.should_not eql(web3)
+
+        web4 = Webpage.new('/')
+        web1.should_not eql(web4)
+    end
+
 end

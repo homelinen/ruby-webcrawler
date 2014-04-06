@@ -3,13 +3,16 @@
 require 'open-uri'
 require 'nokogiri'
 
-require './lib/webpage'
+require 'webpage'
+require 'utility'
 
-module Grabber
+# A site map is a tree of Webpages
+class Webcrawler
+
     # Given a url, find and replace http or https to the alternate form
     #
     # This is to patch the feature in open-url that blocks https -> http redirection
-    def http_swap(url)
+    def self.http_swap(url)
 
         # If we don't set new_url again, return the original
         new_url = url
@@ -47,18 +50,8 @@ module Grabber
         end
     end
 
-    def has_link?(ary, link)
-
-        found = false
-        
-        ary.each do |webpage|
-            if webpage.node_name == link
-                found = true
-                break
-            end
-        end
-
-        found
+    def has_link?(link)
+        Utility.has_link?(found, link)
     end
 
     def getSubLinks(url, found)
@@ -73,7 +66,7 @@ module Grabber
 
         if links
             links.each do |l|
-                unless has_link?(found, l)
+                unless Utility.has_link?(found, l)
 
                     wp = Webpage.new(l)
                     found << wp
@@ -85,7 +78,6 @@ module Grabber
             end
         end
     end
-
 
     def grabWebsite(url, found = [])
 
@@ -106,6 +98,3 @@ module Grabber
         found
     end
 end
-
-# TODO: Grab the base of a url, no sub dirs
-#puts Grabber.grabWebsite('http://digitalocean.com')
