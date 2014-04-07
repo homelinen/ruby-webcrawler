@@ -37,6 +37,9 @@ class Webpage
 
     # Add a page to the tree
     def add_page(page)
+
+        raise 'PageOfTypeString' if page.class == String
+
         existing_page = get_page(page)
 
         # Add the new page
@@ -49,14 +52,18 @@ class Webpage
     def to_s
         # Only get the node name for the tree
         site_links = @site_links.map { |s| s.node_name }
-        @node_name + ' ' + site_links
+        @node_name + ' ' + site_links.join(', ')
     end
 
     def has_link?(link)
-        is_me = false
+        is_me = 
+            if link.class == String
+                @node_name == link
+            else
+                @node_name == link.node_name
+            end
 
-        is_me = @node_name == link
-        is_me = @node_name == link.node_name unless link.class == String or is_me
+        puts 'Link: ' + link.to_s + ' node: ' + self.to_s
 
         unless is_me
             Utility.has_link?(@site_links, link)
