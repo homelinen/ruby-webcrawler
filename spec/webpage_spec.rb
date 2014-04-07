@@ -1,5 +1,6 @@
 #webpage_spec.rb
 
+require 'spec_helper'
 require 'webpage'
 
 describe Webpage, "new" do
@@ -75,7 +76,7 @@ describe Webpage, "new" do
         page.has_link?(Webpage.new('/about')).should be_true
 
         # TODO: issue #7
-        new_page = Webpage.new('/about').add_page('/careers')
+        new_page = Webpage.new('/about').add_page(Webpage.new('/careers'))
         page.has_link?(new_page).should be_true, 
             'same node names should count as existing'
     end

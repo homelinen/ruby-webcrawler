@@ -1,10 +1,10 @@
 
+require 'spec_helper'
 require 'utility'
 
 describe Utility, "provides utilities" do
 
     before(:each) do
-        @arry = []
         @links = ['/', '/about', '/contact', '/about/contract']
         @false_links = ['/friends', '/about/false']
 
