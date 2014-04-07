@@ -1,5 +1,7 @@
 #webpage_spec.rb
 
+require 'spec_helper'
+
 require 'nokogiri'
 
 require 'webcrawler'
@@ -39,6 +41,24 @@ describe Webcrawler, "utility" do
         links.uniq.should == links
     end
 
+    def sitemap_is_unique?(webpage, found = [])
+        webpage.site_links.any? do |wp|
+            not_unique = found.any? { |f| f.node_name == wp.node_name and not f equals? wp }
+
+            unless not_unique
+                children_unique = sitemap_is_unique?(webpage)
+
+                if children_unique.nil?
+                    true
+                else
+                    children_unique
+                end
+            else
+                false
+            end
+        end
+    end
+
     it "can search a website" do
         # This must match the heel config in the Rakefile
         localsite = 'http://0.0.0.0:9999'
@@ -46,9 +66,22 @@ describe Webcrawler, "utility" do
         sitemap = Webcrawler.new
         found = sitemap.grabWebsite localsite
 
-        found.site_links.length.should be 1
-
         found.include?(Webpage.new('/')).should be_true
+        found.include?(Webpage.new('/projects/project1.html')).should be_true
+        found.include?(Webpage.new('/projects/project2.html')).should be_true
+        found.sitemap.length.should be 2
+
+        # No sites should have same node_name and differ
+        site_is_unique(found).should be_true
+
+    end
+
+    it "can handle redirects" do
+
+        site = 'http://digitalocean.com'
+
+        sitemap = Webcrawler.new
+        sitemap.grabWebsite(site).should raise_error(RuntimeError)
     end
 
     #it "can handle urls" do
