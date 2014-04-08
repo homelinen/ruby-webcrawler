@@ -7,6 +7,8 @@ unless ARGV[0].nil? or ARGV[0].empty?
 
     found = sitemap.grabWebsite(ARGV[0])
 
+    puts 'PRINT'
+
     puts found
 else
     puts "Not enough arguments"
