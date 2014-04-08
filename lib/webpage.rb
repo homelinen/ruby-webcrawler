@@ -63,8 +63,6 @@ class Webpage
                 @node_name == link.node_name
             end
 
-        puts 'Link: ' + link.to_s + ' node: ' + self.to_s
-
         unless is_me
             Utility.has_link?(@site_links, link)
         else

@@ -96,7 +96,7 @@ class Webcrawler
         begin
             getSubLinks(url, found)
         rescue RuntimeError
-            url = http_swap(url)
+            url = Webcrawler.http_swap(url)
             getSubLinks(url, found)
         end
 
