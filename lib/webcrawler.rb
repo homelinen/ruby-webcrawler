@@ -63,7 +63,7 @@ class Webcrawler
         links = page_analyse(doc)
         
         # Make sure we search ourself
-        links_so_far = found.site_links << found.node_name
+        links_so_far = found.site_links + [found.node_name]
 
         if links
             links.each do |l|
