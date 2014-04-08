@@ -52,7 +52,14 @@ class Webpage
     def to_s
         # Only get the node name for the tree
         site_links = @site_links.map { |s| s.node_name }
-        @node_name + ' ' + site_links.join(', ')
+
+        # This nightmarish string prints, as an example:
+        # #<Webpage node_name: /
+        #     site_links:
+        #       /about,
+        #       /project
+        # >
+        "#<Webpage node_name: #{@node_name}\n\tsite_links:#{"\n\t\t" unless site_links.empty?}#{site_links.join(",\n\t\t")}\n>"
     end
 
     def has_link?(link)

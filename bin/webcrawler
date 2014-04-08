@@ -5,9 +5,12 @@ require 'webcrawler'
 unless ARGV[0].nil? or ARGV[0].empty?
     sitemap = Webcrawler.new()
 
-    found = sitemap.grabWebsite(ARGV[0])
-
-    puts 'PRINT'
+    begin
+        found = sitemap.grabWebsite(ARGV[0])
+    rescue OpenSSL::SSL::SSLError
+        # This can happen for self-signed certificates
+        puts 'Can\'t verify server SSL'
+    end
 
     puts found
 else

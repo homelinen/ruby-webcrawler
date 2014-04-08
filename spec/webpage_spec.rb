@@ -81,4 +81,16 @@ describe Webpage, "new" do
             'same node names should count as existing'
     end
 
+    it "can be printed as a string" do
+        node_name = '/'
+        w = Webpage.new(node_name)
+        w.to_s.should == "#<Webpage node_name: #{node_name}\n\tsite_links:\n>"
+
+        node_name = '/friends'
+        site_links = ['/about', '/project']
+        w = Webpage.new(node_name)
+        site_links.each { |s| w.add_page(Webpage.new(s)) }
+        w.to_s.should == "#<Webpage node_name: #{node_name}\n\tsite_links:\n\t\t#{site_links[0]},\n\t\t#{site_links[1]}\n>"
+    end
+
 end

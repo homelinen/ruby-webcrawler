@@ -7,6 +7,10 @@ require 'utility'
 # A site map is a tree of Webpages
 class Webcrawler
 
+    def initialize
+        @base_url = ''
+    end
+
     # Given a url, find and replace http or https to the alternate form
     #
     # This is to patch the feature in open-url that blocks https -> http redirection
@@ -44,7 +48,7 @@ class Webcrawler
                 end
             end
 
-            links.uniq!
+            links.uniq
         end
     end
 
@@ -76,12 +80,21 @@ class Webcrawler
                     # Update the so far list, easier than joining two arrays
                     # per iter
                     links_so_far << wp
-                    grabWebsite(url + '/' + l, found)
+                    grabWebsite(@base_url + '/' + l, found)
                 else
                     # TODO: Add to a webpages links if not already there
                 end
             end
         end
+    end
+     
+    def getBaseUrl(url)
+
+        # http or https followed by ://
+        # The url can be letters, numbers dashes an dots, optionally followed by a port
+        rex = /https?:\/\/[\w\.\-]+(:\d+)?/
+
+        @base_url = rex.match(url)[0]
     end
 
     def grabWebsite(url, found = nil)
@@ -93,6 +106,8 @@ class Webcrawler
 
             found = root_page
         end
+
+        getBaseUrl(url)
 
         begin
             getSubLinks(url, found)
