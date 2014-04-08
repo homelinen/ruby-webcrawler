@@ -62,6 +62,7 @@ class Webcrawler
 
         links = page_analyse(doc)
         
+        # Make sure we search ourself
         links_so_far = found.site_links << found.node_name
 
         if links
@@ -70,7 +71,7 @@ class Webcrawler
                 unless Utility.has_link?(links_so_far, l)
 
                     wp = Webpage.new(l)
-                    found.add_link wp
+                    found.add_page wp
 
                     # Update the so far list, easier than joining two arrays
                     # per iter
