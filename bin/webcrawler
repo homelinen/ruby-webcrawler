@@ -12,6 +12,10 @@ unless ARGV[0].nil? or ARGV[0].empty?
     rescue OpenSSL::SSL::SSLError
         # This can happen for self-signed certificates
         puts 'Can\'t verify server SSL'
+        exit 2
+    rescue RuntimeError
+        puts "Couldn't deal with http <-> https redirects for #{ARGV[0]}."
+        exit 2
     end
 
     html_gen = HTMLGenerator.new(found)

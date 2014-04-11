@@ -80,7 +80,9 @@ describe Webcrawler, "utility" do
         found.include?(Webpage.new('/')).should be_true
         found.include?(Webpage.new('/projects/project1.html')).should be_true
         found.include?(Webpage.new('/projects/project2.html')).should be_true
-        found.site_links.length.should be > 2
+
+        # Test child elements still have children
+        found.site_links.find { |a| a.node_name == '/projects' }.has_link?('/projects/project1.html').should be_true
 
         # No sites should have same node_name and differ
         #sitemap_is_unique(found).should be_true
