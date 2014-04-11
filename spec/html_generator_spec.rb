@@ -5,24 +5,26 @@ require 'webpage'
 
 require 'nokogiri'
 
-describe 'HTMLGenerator', "build a website out of a list of pages" do
+describe HTMLGenerator, "build a website out of a list of pages" do
 
   it "can generate the HTML files" do
+
+    out_dir = 'output_spec'
 
     w = Webpage.new('/')
     w.add_page(Webpage.new('/about'))
 
-    html_gen = HTMLGenerator.new(w)
+    html_gen = HTMLGenerator.new(w, out_dir)
 
     html_gen.generate
 
-    Dir('output').should not_raise_error(Errno::ENOENT), 'Output directory should exist'
+    Dir.new(out_dir).should_not raise_error(Errno::ENOENT), 'Output directory should exist'
 
-    d = Dir('output/')
+    d = Dir.new(out_dir)
 
     d.each do |file|
       unless file == '.' or file == '..'
-        f = open(file)
+        f = open(out_dir + '/' + file)
 
         doc = Nokogiri(f)
 

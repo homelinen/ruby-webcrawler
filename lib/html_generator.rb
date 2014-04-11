@@ -7,9 +7,9 @@ include ERB::Util
 
 class HTMLGenerator
 
-    def initialize(root_page, prefix_domain='')
+    def initialize(root_page, output_dir = 'output', prefix_domain='')
 
-        @output_dir = 'output'
+        @output_dir = output_dir
         @prefix_domain = prefix_domain
 
         # Make sure the output directory is setup

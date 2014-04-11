@@ -1,0 +1,16 @@
+
+URL: <%= webpage.node_name %>
+
+Links: 
+<ul>
+  <% webpage.site_links.each do |links| %>
+    <li>
+    <a href="<%= @prefix_domain %>pages/<%= url_encode(links) %>">
+        <%= links.node_name %>
+      </a>
+    </li>
+  <% end %>
+</ul>
+
+
+
