@@ -76,4 +76,9 @@ describe Utility, "Deep Links" do
 
         Utility.has_link?([@root], Webpage.new('/about/project')).should be_true
     end
+
+    it "can find a page in a recursive tree" do
+        @root.add_page(Webpage.new('/contact').add_page(Webpage.new('/about')))
+        Utility.has_link?([@root], Webpage.new('/about/project')).should be_true
+    end
 end

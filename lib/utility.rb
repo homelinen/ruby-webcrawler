@@ -20,15 +20,22 @@ module Utility
         a == b
     end
 
-    def self.has_link?(ary, link)
+    def self.has_link?(ary, link, visited = [])
         ary.any? do |webpage|
-            p webpage
-            head = compare_pages(webpage, link)
 
-            unless head or webpage.is_a? String
-                Utility.has_link?(webpage.site_links, link)
+            # If the page has been visited before, we don't care about it
+            unless visited.include?(webpage)
+                head = compare_pages(webpage, link)
+
+                visited << webpage
+
+                unless head or webpage.is_a? String
+                    Utility.has_link?(webpage.site_links, link, visited)
+                else
+                    head
+                end
             else
-                head
+                false
             end
         end
     end
