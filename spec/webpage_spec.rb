@@ -13,7 +13,7 @@ describe Webpage, "new" do
 
         webpage.node_name.should eql(address)
         webpage.site_links.count.should be 0 
-
+        webpage.error_code.should be 0
     end
 
     it "can add links" do

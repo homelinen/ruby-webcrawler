@@ -8,7 +8,7 @@ class Webpage
 
     #TODO: Pages should have a domain? 
 
-    attr_accessor :node_name, :site_links
+    attr_accessor :node_name, :site_links, :error_code
 
     def self.new(node_name)
         # Check for invalid web names
@@ -20,6 +20,7 @@ class Webpage
     def initialize(node_name)
         @node_name = node_name
         @site_links = []
+        @error_code = 0
     end
 
     def get_page(page)
@@ -81,6 +82,10 @@ class Webpage
 
         webpage.node_name == @node_name
 
+    end
+
+    def set_error_code(error_code)
+        @error_code = error_code
     end
 
     def empty?

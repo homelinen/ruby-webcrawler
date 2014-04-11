@@ -18,9 +18,10 @@ describe HTMLGenerator, "build a website out of a list of pages" do
 
     html_gen.generate
 
-    Dir.new(out_dir).should_not raise_error(Errno::ENOENT), 'Output directory should exist'
+    Dir.new(out_dir).should_not raise_error, 'Output directory should exist'
 
     d = Dir.new(out_dir)
+    (d.count - 2).should be 2
 
     d.each do |file|
       unless file == '.' or file == '..'

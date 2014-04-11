@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'webcrawler'
+require 'html_generator'
 require 'openssl'
 
 unless ARGV[0].nil? or ARGV[0].empty?
