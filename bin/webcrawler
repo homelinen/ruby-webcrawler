@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'webcrawler'
+require 'openssl'
 
 unless ARGV[0].nil? or ARGV[0].empty?
     sitemap = Webcrawler.new()
@@ -12,7 +13,11 @@ unless ARGV[0].nil? or ARGV[0].empty?
         puts 'Can\'t verify server SSL'
     end
 
-    puts found
+    html_gen = HTMLGenerator.new(found)
+    root_page = html_gen.generate
+
+    puts 'Generated the website to the outputs/ folder'
+    puts "Open #{root_page} in a browser to view the site map"
 else
     puts "Not enough arguments"
 end

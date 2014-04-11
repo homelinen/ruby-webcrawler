@@ -9,6 +9,7 @@ class Webcrawler
 
     def initialize
         @base_url = ''
+        @root_node = nil
     end
 
     # Given a url, find and replace http or https to the alternate form
@@ -58,6 +59,7 @@ class Webcrawler
 
     def getSubLinks(url, found)
 
+        p url
         begin
             doc = Nokogiri(open(url, redirect: true))
         rescue OpenURI::HTTPError
@@ -67,25 +69,28 @@ class Webcrawler
         links = page_analyse(doc)
         
         # Make sure we search ourself
-        links_so_far = found.site_links + [found.node_name]
+        # This needs to recurse through the DS
+        #links_so_far = found.site_links + [found.node_name]
 
         if links
             links.each do |l|
 
-                unless Utility.has_link?(links_so_far, l)
+                unless Utility.has_link?([@root_node], l)
 
                     wp = Webpage.new(l)
                     found.add_page wp
 
                     # Update the so far list, easier than joining two arrays
                     # per iter
-                    links_so_far << wp
-                    grabWebsite(@base_url + '/' + l, found)
+                    #links_so_far << wp
+                    grabWebsite(@base_url + l, found)
                 else
                     # TODO: Add to a webpages links if not already there
                 end
             end
         end
+
+        found
     end
      
     def getBaseUrl(url)
@@ -105,15 +110,14 @@ class Webcrawler
             root_page = Webpage.new(root)
 
             found = root_page
+            @root_node = found
         end
 
-        getBaseUrl(url)
-
         begin
-            getSubLinks(url, found)
+            getBaseUrl(url)
+            found = getSubLinks(url, found)
         rescue RuntimeError
-            url = Webcrawler.http_swap(url)
-            getSubLinks(url, found)
+            found = Webpage.new('_error')
         end
 
         found

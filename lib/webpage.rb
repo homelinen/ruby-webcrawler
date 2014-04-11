@@ -83,5 +83,9 @@ class Webpage
 
     end
 
+    def empty?
+        site_links.empty?
+    end
+
     alias :include? :has_link?
 end
