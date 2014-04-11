@@ -12,6 +12,21 @@ module Utility
         end
     end
 
+    # Create a clean base url
+    #
+    # Removes parameters and # links on pages
+    def self.strip_symbols(url)
+
+      # Replace everything after and including:
+      #   #, ?
+      url = url.gsub(/([#\?].*)/, '')
+
+      # Remove trailing slashes, unless there's only one
+      url = url[0..-2] if url.length > 1 and url[-1] == '/'
+
+      url
+    end
+
     # Compare items if they are string or not
     def self.compare_pages(a, b)
         a = get_node_name(a)
