@@ -1,18 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Path <%= webpage.node_name %></title>
+</head>
+<body>
+<h1>Path: <%= webpage.node_name %></h1>
 
-URL: <%= webpage.node_name %>
-
-Links: 
-<ul>
-  <% webpage.site_links.each do |links| %>
-    <li>
-    <%  fixed = fix_html(links.node_name)
-    fixed ||= links.node_name %>
-    <a href="<%= my_url_encode(fixed) %>">
-        <%= links.node_name %>
-      </a>
-    </li>
-  <% end %>
-</ul>
+<p>
+  <strong>Links</strong>: 
+  <ul>
+    <% webpage.site_links.each do |links| %>
+      <li>
+      <%  fixed = fix_html(links.node_name)
+      fixed ||= links.node_name %>
+      <a href="<%= my_url_encode(fixed) %>">
+          <%= links.node_name %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</p>
+</body>
+</html>
 
 
 

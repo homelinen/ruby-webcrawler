@@ -59,10 +59,9 @@ class Webcrawler
 
     def getSubLinks(url, found)
 
-        p url
         begin
             doc = Nokogiri(open(url, redirect: true))
-        rescue OpenURI::HTTPError
+        rescue OpenURI::HTTPError, URI::InvalidURIError
            # Do nothing 
         end
 
@@ -83,7 +82,7 @@ class Webcrawler
                     # Update the so far list, easier than joining two arrays
                     # per iter
                     #links_so_far << wp
-                    grabWebsite(@base_url + l, found)
+                    grabWebsite(@base_url + l, wp)
                 else
                     # TODO: Add to a webpages links if not already there
                 end
@@ -117,7 +116,8 @@ class Webcrawler
             getBaseUrl(url)
             found = getSubLinks(url, found)
         rescue RuntimeError
-            found = Webpage.new('_error')
+          # Tried it one last time, no joy
+          raise
         end
 
         found

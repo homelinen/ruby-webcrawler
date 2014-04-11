@@ -44,7 +44,7 @@ class HTMLGenerator
     # Strip out slashes and replace with dashes
     def my_url_encode(url)
         # Replace / with -, drop the ?= part of a link
-        url = url.sub('/', '').gsub(/\?.*/, '').gsub('/', '-')
+        url = url.sub('/', '').gsub(/\?.*/, '').gsub(/\/|\(|\)/, '-')
     end
 
     def write_page(webpage, erb_template)
