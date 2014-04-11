@@ -62,3 +62,18 @@ describe Utility, "string arrays" do
         end
     end
 end
+
+describe Utility, "Deep Links" do
+
+    before(:each) do
+        @root = Webpage.new('/')
+        about = Webpage.new('/about').add_page Webpage.new('/about/project')
+
+        @root.add_page(about)
+    end
+
+    it "can find a page deep in the tree" do
+
+        Utility.has_link?([@root], Webpage.new('/about/project')).should be_true
+    end
+end

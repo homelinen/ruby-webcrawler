@@ -22,7 +22,14 @@ module Utility
 
     def self.has_link?(ary, link)
         ary.any? do |webpage|
-            compare_pages(webpage, link)
+            p webpage
+            head = compare_pages(webpage, link)
+
+            unless head or webpage.is_a? String
+                Utility.has_link?(webpage.site_links, link)
+            else
+                head
+            end
         end
     end
 end
