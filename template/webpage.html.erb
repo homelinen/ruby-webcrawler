@@ -5,7 +5,9 @@ Links:
 <ul>
   <% webpage.site_links.each do |links| %>
     <li>
-    <a href="<%= @prefix_domain %>pages/<%= url_encode(links) %>">
+    <%  fixed = fix_html(links.node_name)
+    fixed ||= links.node_name %>
+    <a href="<%= my_url_encode(fixed) %>">
         <%= links.node_name %>
       </a>
     </li>
