@@ -34,13 +34,38 @@ class Webcrawler
         new_url
     end
 
+    def is_foreign?(url, page=nil)
+
+      page = @base_url if page.nil?
+      
+      different_site = false
+
+      has_bad_proto = url[0..1] == '//'
+
+      different_site = url.match(page).nil? unless url[0] == '/'
+
+      has_bad_proto or different_site
+    end
+
     # Analyse a page grabbed from the URLs
     def page_analyse(doc)
+
+        out = {}
 
         if doc
         
             # Get all the links href values
             hrefs = doc.xpath("//a/@href")
+            css = doc.xpath("//link").find_all { |n| n.attribute 'href' }
+            js = doc.xpath("//script").find_all { |n| n.attribute 'src' }
+
+            assets = []
+            assets = assets + css.map { |c| c.attribute('href').value }
+            assets = assets + js.map { |j| j.attribute('src').value }
+
+            out[:assets] = assets.find_all do |a|
+              not is_foreign?(a)
+            end
 
             links = []
 
@@ -51,8 +76,9 @@ class Webcrawler
                 end
             end
 
-            links.uniq
+            out[:links] = links.uniq
         end
+        out
     end
 
     def has_link?(link)
@@ -75,7 +101,10 @@ class Webcrawler
            # Do nothing 
         end
 
-        links = page_analyse(doc)
+        analysed_doc = page_analyse(doc)
+
+        links = analysed_doc[:links]
+        found.assets = analysed_doc[:assets]
         
         # Make sure we search ourself
         # This needs to recurse through the DS

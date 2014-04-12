@@ -8,7 +8,7 @@ class Webpage
 
     #TODO: Pages should have a domain? 
 
-    attr_accessor :node_name, :site_links, :error_code
+    attr_accessor :node_name, :site_links, :error_code, :assets
 
     def self.new(node_name, copy = nil)
         # Check for invalid web names
@@ -22,6 +22,7 @@ class Webpage
         @site_links = []
         @error_code = 0
         @copy = copy
+        @assets = []
     end
 
     def is_copy?

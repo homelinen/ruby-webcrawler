@@ -30,7 +30,7 @@ describe Webcrawler, "utility" do
 
         doc = Nokogiri(open('./spec/files/test.html'))
 
-        links = sitemap.page_analyse(doc)
+        links = sitemap.page_analyse(doc)[:links]
 
         links.length.should be > 1
         links.should include("/")
@@ -39,6 +39,30 @@ describe Webcrawler, "utility" do
         links.should_not include("/foo")
 
         links.uniq.should == links
+    end
+
+    it "can filter non-local assets" do
+        # This must match the heel config in the Rakefile
+        localsite = 'http://0.0.0.0:9999'
+
+        sitemap = Webcrawler.new
+        found = sitemap.grabWebsite localsite
+
+        found.assets.include?('/style/style.css').should be_true
+        found.assets.include?('http://0.0.0.0:9999/style/skeleton.css').should be_true
+
+        found.assets.include?('http://foreign.com/js/helper.js').should be_false
+        found.assets.include?('//jquery.com/jquery.js').should be_false
+    end
+
+    it "can filter different urls" do
+
+      crawler = Webcrawler.new
+
+      domain = 'http://0.0.0.0:9999'
+
+      url = '//jquery.com'
+      crawler.is_foreign?(url, domain).should be_true
     end
 
     #def sitemap_is_unique?(webpage, found = [])
