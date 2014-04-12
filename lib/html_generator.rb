@@ -13,12 +13,7 @@ class HTMLGenerator
         @prefix_domain = prefix_domain
         if Dir.exist?(@output_dir)
 
-            # Delete the old files
-            Dir.new(@output_dir).each do |i| 
-                unless i == '.' or i == '..'
-                    File.delete(@output_dir + '/' + i)
-                end
-            end
+            rm_r(@output_dir)
         else
             Dir.mkdir(@output_dir) 
         end
@@ -33,6 +28,16 @@ class HTMLGenerator
         root_page = write_page(@root_page, e)
 
         root_page
+    end
+
+    # Remove directory contents
+    def rm_r(dir)
+        # Delete the old files
+        Dir.new(dir).each do |i| 
+            unless i == '.' or i == '..'
+                File.delete(dir + '/' + i)
+            end
+        end
     end
 
     private

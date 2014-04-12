@@ -19,11 +19,6 @@ module Utility
       url
     end
 
-    # Compare items if they are string or not
-    def self.compare_pages(a, b)
-        a == b
-    end
-
     def self.find_link(ary, link)
         found = nil
 
