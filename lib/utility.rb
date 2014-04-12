@@ -27,9 +27,7 @@ module Utility
     def self.find_link(ary, link)
         found = nil
 
-        if link.is_a? String
-            link = Webpage.new(link)
-        end
+        link = Webpage.new(link) if link.is_a? String
 
         ary.each do |page|
 
@@ -42,9 +40,6 @@ module Utility
             # If the page has been visited before, we don't care about it
             unless webpage.is_copy?
                 head = webpage == link
-
-                p head
-                p "Webpage: #{webpage}, link: #{link}"
 
                 unless head
                     found = Utility.find_link(webpage.site_links, link)

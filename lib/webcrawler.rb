@@ -73,8 +73,11 @@ class Webcrawler
 
         if links
             links.each do |l|
+                l = Utility.strip_symbols(l)
 
-                unless Utility.has_link?([@root_node], l)
+                existing_link = Utility.find_link([@root_node], l)
+
+                unless existing_link
 
                     wp = Webpage.new(l)
                     found.add_page wp
@@ -85,6 +88,9 @@ class Webcrawler
                     grabWebsite(@base_url + l, wp)
                 else
                     # TODO: Add to a webpages links if not already there
+                    # TODO: Add an alternate link for each page
+                    wp = Webpage.new(l, existing_link)
+                    found.add_page wp
                 end
             end
         end
