@@ -60,7 +60,7 @@ class HTMLGenerator
         f.write(result)
         f.close
 
-        webpage.site_links.each { |p| write_page(p, erb_template) }
+        webpage.site_links.each { |p| write_page(p, erb_template) unless p.is_copy? }
         file_name
     end
 end
