@@ -128,18 +128,8 @@ class Webcrawler
             @root_node = found
         end
 
-        begin
-            getBaseUrl(url)
-            found = getSubLinks(url, found)
-        rescue RuntimeError
-          begin
-              getBaseUrl(url)
-              found = getSubLinks(url, found)
-          rescue RuntimeError
-            # Tried it one last time, no joy
-            raise
-          end
-        end
+        getBaseUrl(url)
+        found = getSubLinks(url, found)
 
         found
     end
