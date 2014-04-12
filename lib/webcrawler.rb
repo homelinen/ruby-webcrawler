@@ -1,4 +1,6 @@
 require 'open-uri'
+require 'openssl'
+require 'open_uri_redirections'
 require 'nokogiri'
 
 require 'webpage'
@@ -60,7 +62,15 @@ class Webcrawler
     def getSubLinks(url, found)
 
         begin
-            doc = Nokogiri(open(url, redirect: true))
+            # Open and read the website
+          #
+          # INFO: Doesn't care if a cert is valid or if there are unsafe redirects
+            doc = Nokogiri(open(
+              url, 
+              redirect: true, 
+              ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE,
+              allow_redirections: :all
+            ))
         rescue OpenURI::HTTPError, URI::InvalidURIError
            # Do nothing 
         end
@@ -109,6 +119,7 @@ class Webcrawler
 
     def grabWebsite(url, found = nil)
 
+      p url
         if found.nil?
             root = '/'
 
@@ -122,8 +133,13 @@ class Webcrawler
             getBaseUrl(url)
             found = getSubLinks(url, found)
         rescue RuntimeError
-          # Tried it one last time, no joy
-          raise
+          begin
+              getBaseUrl(url)
+              found = getSubLinks(url, found)
+          rescue RuntimeError
+            # Tried it one last time, no joy
+            raise
+          end
         end
 
         found

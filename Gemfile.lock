@@ -17,6 +17,7 @@ GEM
     multi_json (1.8.4)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
+    open_uri_redirections (0.1.4)
     puma (2.8.1)
       rack (>= 1.1, < 2.0)
     rack (1.5.2)
@@ -41,6 +42,7 @@ PLATFORMS
 DEPENDENCIES
   heel
   nokogiri (~> 1.6.1)
+  open_uri_redirections (~> 0.1.4)
   rake
   rspec
   simplecov
