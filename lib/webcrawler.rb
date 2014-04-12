@@ -40,11 +40,21 @@ class Webcrawler
       
       different_site = false
 
-      has_bad_proto = url[0..1] == '//'
+      has_bad_scheme = url[0..1] == '//'
 
       different_site = url.match(page).nil? unless url[0] == '/'
 
-      has_bad_proto or different_site
+      has_bad_scheme or different_site
+    end
+
+    def get_asset(doc, node_name, attribute)
+        assets = doc.xpath("//#{node_name}").map { |c| 
+          c.attribute(attribute).value if c.attribute attribute
+        }.compact
+
+        assets.find_all do |a|
+          not is_foreign?(a)
+        end
     end
 
     # Analyse a page grabbed from the URLs
@@ -56,16 +66,11 @@ class Webcrawler
         
             # Get all the links href values
             hrefs = doc.xpath("//a/@href")
-            css = doc.xpath("//link").find_all { |n| n.attribute 'href' }
-            js = doc.xpath("//script").find_all { |n| n.attribute 'src' }
 
-            assets = []
-            assets = assets + css.map { |c| c.attribute('href').value }
-            assets = assets + js.map { |j| j.attribute('src').value }
-
-            out[:assets] = assets.find_all do |a|
-              not is_foreign?(a)
-            end
+            out[:assets] = 
+              get_asset(doc, 'link', 'href') + 
+              get_asset(doc, 'script', 'src') + 
+              get_asset(doc, 'img', 'src') 
 
             links = []
 
