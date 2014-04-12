@@ -81,4 +81,26 @@ describe Utility, "Deep Links" do
         @root.add_page(Webpage.new('/contact').add_page(Webpage.new('/about')))
         Utility.has_link?([@root], Webpage.new('/about/project')).should be_true
     end
+
+    it "can find one in a tree of doubles" do
+      @root.add_page(Webpage.new('/projects').add_page(Webpage.new('/about/project')))
+
+      Utility.find_link([@root], '/about/project').should be == Webpage.new('/about/project')
+    end
+end
+
+describe Utility, "link sanitiser" do
+
+  it "can strip out nonsense" do
+    links = [
+      ["/my/awesome/site","/my/awesome/site?p=123,q=red"],
+      ["wonderful-site-magic", "wonderful-site-magic#sublink"],
+      ["/my/folder", "/my/folder/"],
+      ["/", "/"]
+    ]
+
+    links.each do |link_test|
+      Utility.strip_symbols(link_test[1]).should == link_test[0]
+    end
+  end
 end

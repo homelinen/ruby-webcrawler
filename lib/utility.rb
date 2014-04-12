@@ -35,9 +35,10 @@ module Utility
         a == b
     end
 
-    def self.has_link?(ary, link, visited = [])
-        ary.any? do |webpage|
+    def self.find_link(ary, link, visited = [])
+        a = ary.find do |webpage|
 
+            p webpage
             # If the page has been visited before, we don't care about it
             unless visited.include?(webpage)
                 head = compare_pages(webpage, link)
@@ -45,13 +46,22 @@ module Utility
                 visited << webpage
 
                 unless head or webpage.is_a? String
-                    Utility.has_link?(webpage.site_links, link, visited)
+                    Utility.find_link(webpage.site_links, link, visited)
                 else
-                    head
+                    webpage
                 end
             else
                 false
             end
         end
+
+        puts "Link: #{link}"
+        puts a
+
+        a
+    end
+
+    def self.has_link?(ary, link)
+        not find_link(ary, link).nil?
     end
 end
