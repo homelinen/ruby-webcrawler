@@ -46,6 +46,16 @@ describe Webpage, "new" do
         web1.should_not ==(web4)
     end
 
+    it "can be a copy" do
+
+        @page = Webpage.new('/about')
+
+        @about = Webpage.new('/about', @page)
+
+        @about.is_copy?.should be_true
+
+    end
+
     it "can add links" do
 
         web1 = Webpage.new('/')
@@ -67,12 +77,9 @@ describe Webpage, "new" do
     it "can find links of two types" do
 
         page = Webpage.new('/')
-        page.has_link?('/').should be_true
         page.has_link?(Webpage.new('/')).should be_true
 
         page.add_page(Webpage.new('/about'))
-
-        page.has_link?('/about').should be_true
         page.has_link?(Webpage.new('/about')).should be_true
 
         # TODO: issue #7

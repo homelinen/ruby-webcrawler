@@ -10,17 +10,22 @@ class Webpage
 
     attr_accessor :node_name, :site_links, :error_code
 
-    def self.new(node_name)
+    def self.new(node_name, copy = nil)
         # Check for invalid web names
         # Should be an exception?
         return nil if node_name.empty?
         super
     end
 
-    def initialize(node_name)
+    def initialize(node_name, copy = nil)
         @node_name = node_name
         @site_links = []
         @error_code = 0
+        @copy = copy
+    end
+
+    def is_copy?
+        not @copy.nil?
     end
 
     def get_page(page)
