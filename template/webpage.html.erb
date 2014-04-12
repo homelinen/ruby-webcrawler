@@ -6,22 +6,36 @@
 <body>
 <h1>Path: <%= webpage.node_name %></h1>
 
+<h2>Links</h2>
 <p>
-  <strong>Links</strong>: 
   <ul>
     <% webpage.site_links.each do |links| %>
       <li>
-      <%  fixed = fix_html(links.node_name)
-      fixed ||= links.node_name %>
-      <a href="<%= my_url_encode(fixed) %>">
+      <%  
+        enc = my_url_encode(links.node_name)
+        fixed = fix_html(enc) 
+        fixed ||= enc
+      %>
+      <a href="<%= fixed %>">
           <%= links.node_name %>
         </a>
       </li>
     <% end %>
   </ul>
 </p>
+
+<h2>Assets</h2>
+
+<p>
+  <ul>
+    <%= webpage.assets %>
+    <% webpage.assets.each do |links| %>
+      <li>
+          <%= links %>
+      </li>
+    <% end %>
+  </ul>
+</p>
 </body>
 </html>
-
-
 

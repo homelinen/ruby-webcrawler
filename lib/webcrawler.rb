@@ -108,8 +108,8 @@ class Webcrawler
 
         analysed_doc = page_analyse(doc)
 
-        links = analysed_doc[:links]
-        found.assets = analysed_doc[:assets]
+        links = analysed_doc[:links] if analysed_doc.has_key? :links
+        found.assets = analysed_doc[:assets] if analysed_doc.has_key? :assets
         
         # Make sure we search ourself
         # This needs to recurse through the DS

@@ -57,6 +57,7 @@ class HTMLGenerator
     end
 
     def write_page(webpage, erb_template)
+
         b = binding
         result = erb_template.result b
 

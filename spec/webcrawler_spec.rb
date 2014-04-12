@@ -55,6 +55,15 @@ describe Webcrawler, "utility" do
         found.assets.include?('//jquery.com/jquery.js').should be_false
     end
 
+    it "can have no assets" do
+        localsite = 'http://0.0.0.0:9999'
+
+        sitemap = Webcrawler.new
+        found = sitemap.grabWebsite localsite
+
+        Utility.find_link([found], '/contact').assets.should_not be_nil
+    end
+
     it "can filter different urls" do
 
       crawler = Webcrawler.new
