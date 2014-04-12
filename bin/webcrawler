@@ -21,6 +21,8 @@ unless ARGV[0].nil? or ARGV[0].empty?
     html_gen = HTMLGenerator.new(found)
     root_page = html_gen.generate
 
+    root_page = 'file://' + Dir.pwd + '/' + root_page
+
     puts 'Generated the website to the outputs/ folder'
     puts "Open #{root_page} in a browser to view the site map"
 else

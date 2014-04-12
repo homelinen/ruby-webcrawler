@@ -1,5 +1,12 @@
 # Web Crawler
 
+## Installation
+
+1. Clone it
+1. Install the necessary gems: `bundle install --without development`
+1. Run it `ruby -Ilib ./bin/webcrawler {{ website }}` where website is off the
+   form: `http://myweb.site[:port]`
+
 ## Testing
 
 To test you need the development gems in the Bundle.

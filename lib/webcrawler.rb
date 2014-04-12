@@ -119,7 +119,6 @@ class Webcrawler
 
     def grabWebsite(url, found = nil)
 
-      p url
         if found.nil?
             root = '/'
 
