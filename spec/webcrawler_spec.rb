@@ -81,7 +81,15 @@ describe Webcrawler, "utility" do
         found.include?(Webpage.new('/projects/project1.html')).should be_true
         found.include?(Webpage.new('/projects/project2.html')).should be_true
 
+        found.include?(Webpage.new('/contact')).should be_true
+        found.include?(Webpage.new('/contact?p=123')).should be_false
+        found.include?(Webpage.new('/projects#1')).should be_false
+        puts 'Found'
+        p found.site_links
+        puts found.site_links.map { |i| i.node_name }.join(",")
+
         # Test child elements still have children
+        puts found.node_name
         found.site_links.find { |a| a.node_name == '/projects' }.has_link?('/projects/project1.html').should be_true
 
         # No sites should have same node_name and differ
