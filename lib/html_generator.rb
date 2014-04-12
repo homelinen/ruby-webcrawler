@@ -1,4 +1,6 @@
 # Generate a HTML representation of the graph of sites
+# 
+# Generate HTML pages detailing a Webpage
 
 require 'webpage'
 require 'erb'
@@ -11,8 +13,9 @@ class HTMLGenerator
 
         @output_dir = output_dir
         @prefix_domain = prefix_domain
-        if Dir.exist?(@output_dir)
 
+        # Ensure we have a clean output directory to work with
+        if Dir.exist?(@output_dir)
             rm_r(@output_dir)
         else
             Dir.mkdir(@output_dir) 
@@ -21,7 +24,8 @@ class HTMLGenerator
         @root_page = root_page
     end
 
-    def generate()
+    # Generate the HTML pages based on the root_page passed in on init
+    def generate
         
         e = ERB.new(open('template/webpage.html.erb').read)
 
@@ -30,7 +34,7 @@ class HTMLGenerator
         root_page
     end
 
-    # Remove directory contents
+    # Remove all the contents in a directory
     def rm_r(dir)
         # Delete the old files
         Dir.new(dir).each do |i| 
@@ -42,11 +46,13 @@ class HTMLGenerator
 
     private
 
+    # Ensure the newly modified names have .html file endings
     def fix_html(file_name)
         file_name = file_name + '.html' if /\.html$/.match(file_name).nil?
     end
 
-    # Strip out slashes and replace with dashes
+    # Strip out slashes and replace with dashes, this is so browsers don't 
+    # mangle the paths on the filesystem
     def my_url_encode(url)
         unless url == '/'
             # Replace / with -, drop the ?= part of a link
@@ -56,6 +62,9 @@ class HTMLGenerator
         end
     end
 
+    # Generate the page from a template
+    #
+    # Recurses into subpages if the page is not a copy
     def write_page(webpage, erb_template)
 
         b = binding

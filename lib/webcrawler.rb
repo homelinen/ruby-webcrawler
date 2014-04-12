@@ -6,7 +6,11 @@ require 'nokogiri'
 require 'webpage'
 require 'utility'
 
-# A site map is a tree of Webpages
+# A class for generating site maps
+#
+# The site map is operated on as a tree, but can be imagined as a graph.
+# Pages that are already in the tree when added are marked as copies and can be
+# used like the original
 class Webcrawler
 
     def initialize
@@ -34,6 +38,7 @@ class Webcrawler
         new_url
     end
 
+    # Check if an asset URL comes from the local site or a remote
     def is_foreign?(url, page=nil)
 
       page = @base_url if page.nil?
@@ -47,6 +52,8 @@ class Webcrawler
       has_bad_scheme or different_site
     end
 
+    # Get the asset source names as an array from the given document with the
+    # given node name and attribute
     def get_asset(doc, node_name, attribute)
         assets = doc.xpath("//#{node_name}").map { |c| 
           c.attribute(attribute).value if c.attribute attribute
@@ -58,6 +65,8 @@ class Webcrawler
     end
 
     # Analyse a page grabbed from the URLs
+    #
+    # TODO: More elegantly handle the else statement. An output of {} isn't very sane
     def page_analyse(doc)
 
         out = {}
@@ -90,6 +99,7 @@ class Webcrawler
         Utility.has_link?(found, link)
     end
 
+    # The main operation for recursively fetching URLs and operating on the XML
     def getSubLinks(url, found)
 
         begin
@@ -111,10 +121,7 @@ class Webcrawler
         links = analysed_doc[:links] if analysed_doc.has_key? :links
         found.assets = analysed_doc[:assets] if analysed_doc.has_key? :assets
         
-        # Make sure we search ourself
-        # This needs to recurse through the DS
-        #links_so_far = found.site_links + [found.node_name]
-
+        # Work on the child links of a page if they are not already contained in the root tree
         if links
             links.each do |l|
                 l = Utility.strip_symbols(l)
@@ -151,6 +158,7 @@ class Webcrawler
         @base_url = rex.match(url)[0]
     end
 
+    # The main method to grab a website. Handles the root case and initialises the objects @root_node field
     def grabWebsite(url, found = nil)
 
         if found.nil?

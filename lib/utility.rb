@@ -19,6 +19,8 @@ module Utility
       url
     end
 
+    # From an array of Webpages or string, find the string or Webpage url and 
+    # return the first hit
     def self.find_link(ary, link)
         found = nil
 
@@ -34,9 +36,8 @@ module Utility
 
             # If the page has been visited before, we don't care about it
             unless webpage.is_copy?
-                head = webpage == link
 
-                unless head
+                unless webpage == link
                     found = Utility.find_link(webpage.site_links, link)
                 else
                     found = webpage
@@ -49,6 +50,7 @@ module Utility
         found
     end
 
+    # Check if a page exists in an array
     def self.has_link?(ary, link)
         not find_link(ary, link).nil?
     end
