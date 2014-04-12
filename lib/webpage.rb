@@ -94,9 +94,5 @@ class Webpage
         @error_code = error_code
     end
 
-    def empty?
-        site_links.empty?
-    end
-
     alias :include? :has_link?
 end
