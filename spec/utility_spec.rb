@@ -54,6 +54,7 @@ describe Utility, "string arrays" do
     it "can find links as pages" do
 
         @links.each do |l|
+            Utility.find_link(@arry, Webpage.new(l)).should be == Webpage.new(l)
             Utility.has_link?(@arry, Webpage.new(l)).should be_true
         end
         
@@ -67,9 +68,9 @@ describe Utility, "Deep Links" do
 
     before(:each) do
         @root = Webpage.new('/')
-        about = Webpage.new('/about').add_page Webpage.new('/about/project')
+        @about = Webpage.new('/about').add_page Webpage.new('/about/project')
 
-        @root.add_page(about)
+        @root.add_page(@about)
     end
 
     it "can find a page deep in the tree" do
@@ -78,7 +79,7 @@ describe Utility, "Deep Links" do
     end
 
     it "can find a page in a recursive tree" do
-        @root.add_page(Webpage.new('/contact').add_page(Webpage.new('/about')))
+        @root.add_page(Webpage.new('/contact').add_page(Webpage.new('/about', @about)))
         Utility.has_link?([@root], Webpage.new('/about/project')).should be_true
     end
 

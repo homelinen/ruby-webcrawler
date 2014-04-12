@@ -4,14 +4,6 @@ require 'webpage'
 # Shared utility code
 module Utility
 
-    def self.get_node_name(page)
-        if page.is_a? Webpage
-            page.node_name
-        else
-            page
-        end
-    end
-
     # Create a clean base url
     #
     # Removes parameters and # links on pages
@@ -29,36 +21,42 @@ module Utility
 
     # Compare items if they are string or not
     def self.compare_pages(a, b)
-        a = get_node_name(a)
-        b = get_node_name(b)
-
         a == b
     end
 
-    def self.find_link(ary, link, visited = [])
-        a = ary.find do |webpage|
+    def self.find_link(ary, link)
+        found = nil
 
-            p webpage
-            # If the page has been visited before, we don't care about it
-            unless visited.include?(webpage)
-                head = compare_pages(webpage, link)
+        if link.is_a? String
+            link = Webpage.new(link)
+        end
 
-                visited << webpage
+        ary.each do |page|
 
-                unless head or webpage.is_a? String
-                    Utility.find_link(webpage.site_links, link, visited)
-                else
-                    webpage
-                end
+            if page.is_a? String
+                webpage = Webpage.new(page)
             else
-                false
+                webpage = page
+            end
+
+            # If the page has been visited before, we don't care about it
+            unless webpage.is_copy?
+                head = webpage == link
+
+                p head
+                p "Webpage: #{webpage}, link: #{link}"
+
+                unless head
+                    found = Utility.find_link(webpage.site_links, link)
+                else
+                    found = webpage
+                end
+
+                break unless found.nil?
             end
         end
 
-        puts "Link: #{link}"
-        puts a
-
-        a
+        found
     end
 
     def self.has_link?(ary, link)
